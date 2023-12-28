@@ -28,3 +28,10 @@ def get_user_by_groups(group_id : int, db: Session = Depends(get_db)):
     if db_user is None:
         raise HTTPException(status_code=404, detail="Group not Found")
     return db_user
+
+@router.get("/{group_id}", response_model=groupSchema.Group)
+def get_group_by_id(group_id : int, db: Session = Depends(get_db)):
+    db_user = groupController.get_group(db, group_id=group_id)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="Group not Found")
+    return db_user
