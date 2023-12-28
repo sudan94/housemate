@@ -18,6 +18,9 @@ def create_user(db: Session, user: userSchema.UserCreate):
     db.refresh(db_user)
     return db_user
 
+def get_tasks(db: Session,user_id):
+    return db.query(userModel.UserTask).join(userModel.User).filter(userModel.UserTask.user_id == user_id).all()
+
 
 # def delete_user(db: Session, id):
 #     return db.query(userModel.User).filter(userModel.User.id == id).delete()
