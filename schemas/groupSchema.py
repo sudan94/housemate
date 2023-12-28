@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from models import groupModel
 
 class GroupBase(BaseModel):
     title: str
