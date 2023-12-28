@@ -1,22 +1,38 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from schemas import userSchema
-from controller import cuserController
+from controller import userController
 from database import get_db
 
-router = APIRouter()
+router = APIRouter(    prefix="/user",
+    tags=["Users"],
+    responses={404: {"description": "Not found"}},
+)
 
-@router.get("/user/{user_id}", response_model=userSchema.User)
-def get_user(user_id : int, db: Session = Depends(get_db)):
-    db_user = cuserController.get_user(db, user_id=user_id)
+@router.get("/{user_id}", response_model=userSchema.User)
+def get_user_by_id(user_id : int, db: Session = Depends(get_db)):
+    db_user = userController.get_user(db, user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not Found")
     return db_user
 
-@router.post("/users", response_model=userSchema.User)
+@router.get("", response_model=list[userSchema.User])
+def get_users(db: Session = Depends(get_db)):
+    db_user = userController.get_all_users(db)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not Found")
+    return db_user
+
+@router.post("", response_model=userSchema.User)
 def create_user(user: userSchema.UserCreate, db: Session =Depends(get_db)):
-    db_user = cuserController.get_user_by_email(db, email=user.email)
+    db_user = userController.get_user_by_email(db, email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
-    return cuserController.create_user(db=db, user=user)
+    return userController.create_user(db=db, user=user)
 
+# @router.delete("/{user_id}", response_model=userSchema.User)
+# def delete_user(user_id: int, db: Session = Depends(get_db)):
+#     db_user = userController.delete_user(db, id = user_id)
+#     if db_user is None:
+#         raise HTTPException(status_code=404, detail="User not Found")
+#     return db_user

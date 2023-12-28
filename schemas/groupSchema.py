@@ -14,9 +14,13 @@ class Group(GroupBase):
     class Config:
         orm_mode = True
 
+class GroupUser(BaseModel):
+    group_id: int
+
 class GroupUserCreate(BaseModel):
     group_id: int
     user_id: int
 
     class Config:
         orm_mode = True
+

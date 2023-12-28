@@ -17,11 +17,3 @@ class UserGroup(Base):
     id= Column(Integer,primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     group_id = Column(Integer, ForeignKey("group.id"))
-
-class TaskGroup(Base):
-    __tablename__ = "taskGroup"
-
-    id= Column(Integer,primary_key=True, index=True)
-    task_id = Column(Integer, ForeignKey("task.id"))
-    group_id = Column(Integer, ForeignKey("group.id"))
-    frequency = Column(Integer, index=True)

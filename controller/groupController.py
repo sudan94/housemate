@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from models import groupModel
+from models import groupModel, userModel
 from schemas import groupSchema
 
 def get_groups(db: Session, skip: int =0, limit:  int = 100):
@@ -19,3 +19,6 @@ def add_user_groups(db: Session, group:groupSchema.GroupUserCreate):
     db.commit()
     db.refresh(db_group)
     return db_group
+
+def get_users(db: Session,group_id):
+    return db.query(groupModel.UserGroup).join(userModel.User).filter(groupModel.UserGroup.group_id == group_id).all()

@@ -12,6 +12,9 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     pass
 
+class UserDelete(UserBase):
+    id : int
+
 # this is to retrun the user
 class User(UserBase):
     id: int
