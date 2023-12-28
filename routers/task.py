@@ -23,3 +23,10 @@ def read_tasks(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 @router.post("", response_model=taskSchema.Task)
 def create_task(task: taskSchema.TaskCreate, db : Session= Depends(get_db)):
     return taskController.create_task(db=db, task=task)
+
+@router.get("/users/{task_id}", response_model=list[taskSchema.TaskUser])
+def get_users_by_task(task_id : int, db: Session = Depends(get_db)):
+    db_user = taskController.get_users(db, task_id=task_id)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="Group not Found")
+    return db_user

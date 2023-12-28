@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from models import taskModel
+from models import taskModel, userModel
 from schemas import taskSchema
 
 def get_tasks(db: Session, skip: int =0, limit:  int = 100):
@@ -15,3 +15,6 @@ def create_task(db: Session, task:taskSchema.TaskCreate):
     db.commit()
     db.refresh(db_task)
     return db_task
+
+def get_users(db: Session,task_id):
+    return db.query(userModel.UserTask).join(userModel.User).filter(userModel.UserTask.task_id == task_id).all()

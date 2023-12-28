@@ -12,6 +12,9 @@ class TaskCreate(TaskBase):
     starting_user : int
     group_id : int
 
+class TaskUser(BaseModel):
+    task_id : int
+
 class Task(TaskBase):
     id: int
 
