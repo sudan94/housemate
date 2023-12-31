@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from models import groupModel, userModel
+from models import groupModel, userModel, taskModel
 from schemas import groupSchema
 
 def get_groups(db: Session, skip: int =0, limit:  int = 100):
@@ -24,4 +24,10 @@ def add_user_groups(db: Session, group:groupSchema.GroupUserCreate):
     return db_group
 
 def get_users(db: Session,group_id):
-    return db.query(groupModel.UserGroup).join(userModel.User).filter(groupModel.UserGroup.group_id == group_id).all()
+    return db.query(userModel.User).join(groupModel.UserGroup).filter(groupModel.UserGroup.group_id == group_id).all()
+
+def get_tasks(db: Session, group_id):
+    # return db.query(taskModel.Task).join(userModel.UserTask, taskModel.Task.id == userModel.UserTask.task_id, isouter=True).join(groupModel.UserGroup, groupModel.UserGroup.user_id == userModel.UserTask.user_id, isouter=True).filter(groupModel.UserGroup.group_id == group_id).all()
+    # return db.query(userModel.User).join(groupModel.UserGroup).join(userModel.UserTask).join(taskModel.Task, isouter=True).filter(groupModel.UserGroup.group_id == group_id).all()
+    return db.query(userModel.User.name,taskModel.Task.title,userModel.UserTask.due_date).select_from(userModel.User).join(groupModel.UserGroup).join(userModel.UserTask).join(taskModel.Task, isouter=True).filter(groupModel.UserGroup.group_id == group_id).all()
+

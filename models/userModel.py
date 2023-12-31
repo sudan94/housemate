@@ -19,6 +19,4 @@ class UserTask(Base):
     id= Column(Integer,primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     task_id = Column(Integer, ForeignKey("task.id"))
-    start_date = Column(Date, index=True)
-    occurance = Column(Integer, index=True)
-    status = Column(Enum("Due", "Pending", "Completed", name="ValueTypes"), default= "Due")
+    due_date = Column(Date, index=True)
