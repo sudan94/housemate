@@ -20,3 +20,4 @@ class UserTask(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     task_id = Column(Integer, ForeignKey("task.id"))
     due_date = Column(Date, index=True)
+    is_completed = Column(Boolean, default=False, index=True)
