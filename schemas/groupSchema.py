@@ -23,7 +23,7 @@ class GroupUser(BaseModel):
 
 class GroupUserCreate(BaseModel):
     group_id: int
-    user_id: int
+    email : str
 
     class Config:
         orm_mode = True

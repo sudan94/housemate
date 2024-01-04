@@ -17,7 +17,14 @@ def create_groups(db: Session, group:groupSchema.GroupCreate):
     return db_group
 
 def add_user_groups(db: Session, group:groupSchema.GroupUserCreate):
-    db_group = groupModel.UserGroup(group_id = group.group_id, user_id = group.user_id)
+    db_user = db.query(userModel.User).filter(userModel.User.email == group.email).first()
+    if db_user is None:
+        db_user = userModel.User(email = group.email, is_active= False, name ='')
+        db.add(db_user)
+        db.commit()
+        db.refresh(db_user)
+
+    db_group = groupModel.UserGroup(group_id = group.group_id, user_id = db_user.id)
     db.add(db_group)
     db.commit()
     db.refresh(db_group)

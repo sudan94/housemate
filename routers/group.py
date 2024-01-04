@@ -18,7 +18,7 @@ def read_group(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 def create_group(group: groupSchema.GroupCreate, db : Session= Depends(get_db)):
     return groupController.create_groups(db=db, group=group)
 
-@router.post("/userGroup", response_model=groupSchema.GroupUserCreate)
+@router.post("/userGroup")
 def create_group(group: groupSchema.GroupUserCreate, db : Session= Depends(get_db)):
     return groupController.add_user_groups(db=db, group=group)
 
