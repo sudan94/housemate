@@ -28,11 +28,11 @@ def create_user_tasks(db: Session,  date, task_id, frequency, group_id):
             # due_date = datetime.strptime(date +" 00:00:00.0", "%m/%d/%y %H:%M:%S.%f")
             due_date = date
         else:
-            start_date = datetime.datetime.strptime(date , "%m/%d/%Y")
+            start_date = datetime.datetime.strptime(date , "%Y-%m-%d")
             due_date = start_date + datetime.timedelta(days=frequency*j)
             print(due_date)
         user_id = users[j].id
-        task = userModel.UserTask(task_id = task_id, user_id = user_id, due_date = due_date)
+        task = userModel.UserTask(task_id = task_id, user_id = user_id, due_date = due_date, group_id = group_id)
         db.add(task)
         db.commit()
         db.refresh(task)

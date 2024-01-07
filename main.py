@@ -1,9 +1,13 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine
 from models import taskModel, userModel, groupModel
 from routers import task, user, group
 from database import SessionLocal
+import requests
+from dotenv import load_dotenv
+load_dotenv()
+import os
 
 taskModel.Base.metadata.create_all(bind= engine)
 userModel.Base.metadata.create_all(bind= engine)

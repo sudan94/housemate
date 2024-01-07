@@ -21,3 +21,8 @@ class User(UserBase):
 
     class Config:
         orm_mode = True
+
+class UserToken(BaseModel):
+    token: str
+    class Config:
+        orm_mode = True

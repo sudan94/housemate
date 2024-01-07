@@ -19,5 +19,6 @@ class UserTask(Base):
     id= Column(Integer,primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     task_id = Column(Integer, ForeignKey("task.id"))
+    group_id = Column(Integer, ForeignKey("group.id"))
     due_date = Column(Date, index=True)
     is_completed = Column(Boolean, default=False, index=True)
