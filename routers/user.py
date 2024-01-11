@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from schemas import userSchema, taskSchema
 from controller import userController, taskController
+from utils import auth
 from database import get_db
-import json
 
 router = APIRouter(    prefix="/user",
     tags=["Users"],
@@ -32,18 +32,17 @@ def create_user(user: userSchema.UserCreate, db: Session =Depends(get_db)):
     return userController.create_user(db=db, user=user)
 
 @router.get("/tasks/{user_id}")
-def get_user_by_groups(user_id : int, db: Session = Depends(get_db), current_user: userSchema.UserToken = Depends(userController.get_current_user)):
+def get_user_by_groups(user_id : int, db: Session = Depends(get_db), current_user: userSchema.UserToken = Depends(auth.get_current_user)):
     db_user = userController.get_tasks(db, user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail="Tasks not Found")
     return db_user
 
 @router.post("/login")
-async def login(request: Request):
+async def login(request: Request,db:Session = Depends(get_db)):
     token = await request.json()
     code = token['code']
-    print(code)
-    is_valid = userController.auth_google(code = code)
+    is_valid = userController.auth_google(request=request, code = code,db=db)
     if not is_valid:
         raise HTTPException(status_code=401, detail="Invalid token")
     return is_valid

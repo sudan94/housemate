@@ -3,10 +3,12 @@ from sqlalchemy.orm import Session
 from schemas import groupSchema
 from controller import groupController
 from database import get_db
+from utils import auth
 
 router = APIRouter(prefix="/group",
     tags=["Group"],
     responses={404: {"description": "Not found"}},
+    dependencies=[Depends(auth.get_current_user)],
 )
 
 @router.get("", response_model=list[groupSchema.Group])

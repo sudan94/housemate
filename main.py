@@ -8,6 +8,7 @@ import requests
 from dotenv import load_dotenv
 load_dotenv()
 import os
+from utils import auth
 
 taskModel.Base.metadata.create_all(bind= engine)
 userModel.Base.metadata.create_all(bind= engine)
@@ -36,9 +37,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
+
 app.include_router(user.router)
 app.include_router(task.router)
 app.include_router(group.router)
+app.include_router(auth.router)
+
 
 
 

@@ -5,6 +5,8 @@ from config import settings
 from fastapi import Depends, HTTPException, status, Request
 import requests
 from jose import jwt
+from database import get_db
+
 
 def get_user(db : Session, user_id: int):
     return db.query(userModel.User).filter(userModel.User.id == user_id).first()
@@ -40,6 +42,9 @@ def auth_google(code):
 
     if user_info.status_code != 200:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Credentials")
+    # useremail = user_info.json().get("email");
+    # user = db.query(userModel.User).filter(userModel.User.email == useremail).first()
+    # request.session['user_id'] = user.id
     token = create_token(user_info.json())
     return token
 
@@ -51,14 +56,4 @@ def create_token(data: dict):
         "picture": data.get("picture"),
     }
     return jwt.encode(payload, settings.GOOGLE_CLIENT_SECRET, algorithm="HS256")
-
-def get_current_user(token: str):
-    try:
-        payload = jwt.decode(token, settings.GOOGLE_CLIENT_SECRET, algorithms=["HS256"])
-        return payload
-    except:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid Credentials",
-        )
 
