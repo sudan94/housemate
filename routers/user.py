@@ -1,9 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
-from schemas import userSchema, taskSchema
-from controller import userController, taskController
+from schemas import userSchema
+from controller import userController
+from models import userModel
 from utils import auth
 from database import get_db
+from jose import jwt
+from config import settings
 
 router = APIRouter(    prefix="/user",
     tags=["Users"],
@@ -39,12 +42,13 @@ def get_user_by_groups(user_id : int, db: Session = Depends(get_db), current_use
     return db_user
 
 @router.post("/login")
-async def login(request: Request,db:Session = Depends(get_db)):
+async def login(request: Request, db: Session = Depends(get_db)):
     token = await request.json()
     code = token['code']
-    is_valid = userController.auth_google(request=request, code = code,db=db)
+    is_valid = userController.auth_google(code = code)
     if not is_valid:
         raise HTTPException(status_code=401, detail="Invalid token")
+    payload = jwt.decode(is_valid, settings.GOOGLE_CLIENT_SECRET, algorithms=["HS256"])
     return is_valid
 
 

@@ -15,18 +15,16 @@ router = APIRouter(prefix="",
 )
 
 @router.get("/active")
-def get_current_user(credentials: HTTPAuthorizationCredentials= Depends(security),db: Session = Depends(get_db)):
+def get_current_user(credentials: HTTPAuthorizationCredentials= Depends(security)):
     try:
         payload = jwt.decode(credentials.credentials, settings.GOOGLE_CLIENT_SECRET, algorithms=["HS256"])
-        user = db.query(userModel.User).filter(userModel.User.email == payload['email']).first()
-        if user is None:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="User Not registered",
-            )
         return payload
     except:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid Credentials",
         )
+def get_user_id(token : str, db):
+    payload = jwt.decode(token, settings.GOOGLE_CLIENT_SECRET, algorithms=["HS256"])
+    user = db.query(userModel.User).filter(userModel.User.email == payload['email']).first()
+    return user.id

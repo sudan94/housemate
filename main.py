@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 from utils import auth
+from starlette.middleware.sessions import SessionMiddleware
 
 taskModel.Base.metadata.create_all(bind= engine)
 userModel.Base.metadata.create_all(bind= engine)
@@ -16,6 +17,7 @@ groupModel.Base.metadata.create_all(bind= engine)
 
 
 app =FastAPI()
+app.add_middleware(SessionMiddleware, secret_key='your-secret-key')
 
 origins = [
     "*",

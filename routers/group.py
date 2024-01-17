@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from schemas import groupSchema
 from controller import groupController
@@ -12,8 +12,9 @@ router = APIRouter(prefix="/group",
 )
 
 @router.get("", response_model=list[groupSchema.Group])
-def read_group(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    group = groupController.get_groups(db, skip=skip, limit=limit)
+def read_group(request:Request, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    user_id = auth.get_user_id(request.headers.get('Authorization')[7:],db)
+    group = groupController.get_groups(db, skip=skip, limit=limit, user_id=user_id)
     return group
 
 @router.post("", response_model=groupSchema.Group)
