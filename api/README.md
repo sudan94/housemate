@@ -49,7 +49,7 @@ JWT_SECRET_KEY =
 
 ### Start the Server
 ```sh
-uvicorn app.main:app --reload
+uvicorn main:app --reload
 ```
 API will be available at: `http://127.0.0.1:8000`
 
