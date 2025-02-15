@@ -4,7 +4,7 @@ from schemas import userSchema
 from config import settings
 from fastapi import Depends, HTTPException, status, Request
 import requests
-from jose import jwt
+import python_jwt as jwt, jwcrypto.jwk as jwk
 
 
 def get_user(db : Session, user_id: int):
@@ -27,6 +27,7 @@ def get_tasks(db: Session,user_id):
     return db.query(userModel.UserTask).join(userModel.User).filter(userModel.UserTask.user_id == user_id).all()
 
 def auth_google(code):
+
     # token_url = "https://accounts.google.com/o/oauth2/token"
     # data = {
     #     "code": code,
@@ -51,5 +52,6 @@ def create_token(data: dict):
         "email": data.get("email"),
         "picture": data.get("picture"),
     }
-    return jwt.encode(payload, settings.GOOGLE_CLIENT_SECRET, algorithm="HS256")
+    token = jwt.generate_jwt(payload, jwk.JWK.from_password(settings.GOOGLE_CLIENT_SECRET), "HS256")
+    return token
 

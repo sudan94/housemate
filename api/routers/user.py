@@ -2,10 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from schemas import userSchema
 from controller import userController
-from models import userModel
 from utils import auth
 from database import get_db
-from jose import jwt
+import python_jwt as jwt, jwcrypto.jwk as jwk
 from config import settings
 
 router = APIRouter(    prefix="/user",
@@ -48,7 +47,7 @@ async def login(request: Request, db: Session = Depends(get_db)):
     is_valid = userController.auth_google(code = code)
     if not is_valid:
         raise HTTPException(status_code=401, detail="Invalid token")
-    payload = jwt.decode(is_valid, settings.GOOGLE_CLIENT_SECRET, algorithms=["HS256"])
+    header, claims = jwt.verify_jwt(is_valid, jwk.JWK.from_password(settings.GOOGLE_CLIENT_SECRET), ['HS256'])
     return is_valid
 
 
