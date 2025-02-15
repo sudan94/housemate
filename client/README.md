@@ -15,12 +15,6 @@ A frontend client for managing housemates' work schedules, built with React and 
 - Node.js 16+
 - npm or yarn
 
-### Clone the Repository
-```sh
-git clone https://github.com/yourusername/housemate-client-react.git
-cd housemate-client-vite
-```
-
 ### Install Dependencies
 ```sh
 npm install  # or yarn install
