@@ -14,14 +14,9 @@ A backend API for managing housemates' work schedules, built with FastAPI and Po
 - Python 3.10+
 - PostgreSQL installed and running
 
-### Clone the Repository
-```sh
-git clone https://github.com/yourusername/housemate-fastapi-postgres.git
-cd housemate-fastapi-postgres
-```
-
 ### Setup Virtual Environment
 ```sh
+cd api
 python -m venv venv
 source venv/bin/activate  # On Windows use `venv\Scripts\activate`
 ```
